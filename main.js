@@ -331,6 +331,7 @@ function opt3() {
                     " HP)"
                 );
                 reboot();
+                break;
 
               case "escapar":
                 console.log(
@@ -342,6 +343,7 @@ function opt3() {
               default:
                 alert("Opción invalida");
                 console.clear();
+                break;
             }
 
           case "volver":
@@ -430,6 +432,7 @@ function opt3() {
                   " HP)"
               );
               reboot();
+              break;
 
             case "tomar la maza":
               console.log(
@@ -469,6 +472,7 @@ function opt3() {
                       " HP)"
                   );
                   reboot();
+                  break;
               }
 
             default:
@@ -514,6 +518,5 @@ function reboot() {
 
 function youWin() {
   alert("YOU LEFT THE CAVE ALIVE");
-  alert("Score: " + (cat *= 10) + life);
-
+  alert("Score: " + ((cat *= 30) + life));
 }
