@@ -24,7 +24,7 @@ function login() {
     switch (contraseña) {
       case "admin":
         console.log("Acceso permitido");
-        alert("Bienvenido a la interfaz de administrador");
+        alert("Bienvenido a La Cueva");
         t++;
         break;
 
@@ -45,23 +45,28 @@ if (t != 2) {
 let life = 100;
 let cat = 0;
 let remo = false;
+let userName;
 let pathOneTaken = false;
 let pathTwoTaken = false;
 let optLeftTaken = false;
 let optRightTaken = false;
+const scoreBoard = [];
 
-const name = prompt("Nombre de tu personaje");
-alert(
-  "Lee la historia en la consola de desarrollador, y elegi las opciones que creas conveniente, escribiendolas tal cual estan escritas en las opciones."
-);
+startGame();
 
-startPoint();
+function startGame() {
+  userName = prompt("Nombre de tu personaje");
+  alert(
+    "Lee la historia en la consola de desarrollador, y elegi las opciones que creas conveniente, escribiendolas tal cual estan escritas en las opciones."
+  );
+  startPoint();
+}
 
 function startPoint() {
   console.log("SI VOLVES DE UNA ZONA FUTURA IGNORA EL SIGUIENTE MENSAJE");
   console.log(
     "Te levantas en una cueva oscura, con dolor de cabeza, no recordas nada más que tu nombre, " +
-      name +
+      userName +
       ". Tu vista se acostumbra a la oscuridad y ves 3 pasillos, elegí uno. (" +
       life +
       " HP)"
@@ -81,12 +86,11 @@ function choose() {
             " HP)"
         );
         opt1();
-        break;
       } else {
         alert("Ya tomaste este camino, elegi otro.");
         choose();
-        break;
       }
+      break;
 
     case "centro":
       if (pathTwoTaken == false) {
@@ -97,12 +101,11 @@ function choose() {
             " HP)"
         );
         opt2();
-        break;
       } else {
         alert("Ya tomaste este camino, elegi otro.");
         choose();
-        break;
       }
+      break;
 
     case "derecha":
       console.log(
@@ -136,13 +139,13 @@ function opt1() {
       break;
 
     case "descansar":
-      life *= 0;
+      life = 0;
       console.log(
         "Te sentas en las frias piedras, apoyad@ en la pared. Mientras cerras los ojos el dolor y frio desaparecen. Te despertas 40 minutos despues, sin poder moverte, cuando te das cuenta de las pequeñas grietas al otro lado emanando un gas, las ratas te alcanzaron y esta vez van a terminar lo que empezaron. (" +
           life +
           " HP)"
       );
-      reboot();
+      youDied();
       break;
 
     default:
@@ -193,6 +196,7 @@ function downOne() {
           " HP)"
       );
       startPoint();
+      break;
 
     case "acercarme":
       cat += 1;
@@ -206,6 +210,7 @@ function downOne() {
       );
       pathOneTaken = true;
       startPoint();
+      break;
 
     default:
       alert("Opción invalida");
@@ -250,30 +255,31 @@ function downTwo() {
     "En el silencio de la cueva escuchas levemente un sonido intermitente, pero no logras distinguir por cual de los dos caminos proviene. Haces ta te ti y elegis la..."
   );
   let opcion = prompt("izquierda, derecha");
+  function izq() {
+    console.log(
+      "El sonido deja de escucharse, sin embargo observas algo al final del pasillo, parece un cuerpo muerto. Algo se mueve entre su ropa desgastada, te acercas a ver o volves al otro camino?"
+    );
+    let opc = prompt("acercarme, volver");
+    if (opc == "acercarme") {
+      console.log(
+        "Te acercas cuidadosamente al cuerpo, pero tropezas con una tanza y se escucha un fuerte estruendo de donde viniste, por suerte nada malo te sucede. Procedes al cuerpo y mientras desabrochas la camisa del desconocido, una pequeña garra se asoma y rasjuña tu mano. Te alejas para procesar lo que acaba de pasar, y volves nuevamente para ver un pequeño gatito escondido, al cual agarras con cuidado y ahora llevas en el bolsillo de tu sweater. Procedes a volver por donde viniste, ahora el pasillo derecho esta sellado, debe haber sido la explosion de antes. Estas obligado a trepar por la soga y volver al inicio."
+      );
+      cat += 1;
+      pathTwoTaken = true;
+      startPoint();
+    } else if (opc == "volver") {
+      console.log("Decidis volver y elegir tu camino nuevamente");
+      downTwo();
+    } else {
+      alert("Opción invalida");
+      console.clear();
+      izq();
+    }
+  }
   switch (opcion) {
     case "izquierda":
       izq();
-      function izq() {
-        console.log(
-          "El sonido deja de escucharse, sin embargo observas algo al final del pasillo, parece un cuerpo muerto. Algo se mueve entre su ropa desgastada, te acercas a ver o volves al otro camino?"
-        );
-        let opc = prompt("acercarme, volver");
-        if (opc == "acercarme") {
-          console.log(
-            "Te acercas cuidadosamente al cuerpo, pero tropezas con una tanza y se escucha un fuerte estruendo de donde viniste, por suerte nada malo te sucede. Procedes al cuerpo y mientras desabrochas la camisa del desconocido, una pequeña garra se asoma y rasjuña tu mano. Te alejas para procesar lo que acaba de pasar, y volves nuevamente para ver un pequeño gatito escondido, al cual agarras con cuidado y ahora llevas en el bolsillo de tu sweater. Procedes a volver por donde viniste, ahora el pasillo derecho esta sellado, debe haber sido la explosion de antes. Estas obligado a trepar por la soga y volver al inicio."
-          );
-          cat += 1;
-          pathTwoTaken = true;
-          startPoint();
-        } else if (opc == "volver") {
-          console.log("Decidis volver y elegir tu camino nuevamente");
-          downTwo();
-        } else {
-          alert("Opción invalida");
-          console.clear();
-          izq();
-        }
-      }
+      break;
 
     case "derecha":
       console.log(
@@ -284,7 +290,7 @@ function downTwo() {
         "Podes probar el camino de la izquierda o volver donde empezaste"
       );
       let opcTwo = prompt("izquierda, volver");
-      if ((opcTwo = "izquierda")) {
+      if (opcTwo == "izquierda") {
         izq();
       } else {
         console.log(
@@ -292,6 +298,7 @@ function downTwo() {
         );
         startPoint();
       }
+      break;
 
     default:
       alert("Opción invalida");
@@ -321,7 +328,7 @@ function opt3() {
             let opcTwo = prompt("ayudar, escapar");
             switch (opcTwo) {
               case "ayudar":
-                life *= 0;
+                life = 0;
                 console.log(
                   "Decidis acercarte y ayudar, dejas la antorcha en el suelo e intentas levantar a la mujer, cuando de la nada intenta apuñalarte, esta traumada, no sabe quien es quien. Por suerte reaccionaste a tiempo y no tenes mas que un rasjuño, le pedis que se calme, solo queres ayudarla y salir con vida."
                 );
@@ -330,7 +337,7 @@ function opt3() {
                     life +
                     " HP)"
                 );
-                reboot();
+                youDied();
                 break;
 
               case "escapar":
@@ -339,12 +346,14 @@ function opt3() {
                 );
                 optLeftTaken = true;
                 opt3();
+                break;
 
               default:
                 alert("Opción invalida");
                 console.clear();
                 break;
             }
+            break;
 
           case "volver":
             console.log(
@@ -361,8 +370,8 @@ function opt3() {
       } else {
         alert("Ya tomaste este camino, elegi otro.");
         opt3();
-        break;
       }
+      break;
 
     case "centro":
       console.log(
@@ -381,12 +390,11 @@ function opt3() {
                 "Le entregas un pequeño gato al hombre, lo que resulta ser un error ya que no solo lo asesina y lo come, sino que no es suficiente para satisfacerlo, por lo que aún no te admite en su balsa"
               );
               center();
-              break;
             } else {
               alert("No tenes ningun gato");
               center();
-              break;
             }
+            break;
 
           case "ofrecer remo":
             if (remo == true) {
@@ -398,12 +406,13 @@ function opt3() {
               alert("No tenes un remo");
               center();
             }
+            break;
 
           case "atacar":
             console.log(
               "Sean cual sean tus motivos, estas dispuesto a matar a este hombre con tal de escapar. Sin ser obvio te acercaste mientras hablaban, lo suficiente para atacarlo sin que tuviera tiempo de pensar, acertas un golpe tras otro, lo empujas contra la costa, agarras una roca y cuando estas a punto de dar el golpe final, recibis una puñalada directa en el estomago, y otra puñalada en la axila... El hombre te quita de encima suyo, se aleja y mientras intentas sentarte en la costa con tu ultimo respiro, lo observas empujando la balsa, alejandose entre las olas."
             );
-            reboot();
+            youDied();
             break;
 
           case "volver al inicio":
@@ -414,6 +423,7 @@ function opt3() {
             break;
         }
       }
+      break;
 
     case "derecha":
       if (optRightTaken == false) {
@@ -425,13 +435,13 @@ function opt3() {
           let opcion = prompt("escapar, tomar la maza");
           switch (opcion) {
             case "escapar":
-              life *= 0;
+              life = 0;
               console.log(
                 "Te das la vuelta y corres lo mas rapido posible, cuando de repente algo perfora tu cuello, en tus ultimos momentos no podes ni siquiera ver que es, solo usar tus manos para parar el sangrado, lo que no es suficiente. Finalmente te ahogas en tu propia sangre mientras la sombra se acerca con la maza en mano. (" +
                   life +
                   " HP)"
               );
-              reboot();
+              youDied();
               break;
 
             case "tomar la maza":
@@ -451,6 +461,7 @@ function opt3() {
                     "Retrocedes nuevamente hacia donde te encontrabas antes"
                   );
                   opt3();
+                  break;
 
                 case "central":
                   life -= 10;
@@ -463,15 +474,16 @@ function opt3() {
                     "Retrocedes nuevamente hacia donde te encontrabas antes"
                   );
                   opt3();
+                  break;
 
                 case "derecho":
-                  life *= 0;
+                  life = 0;
                   console.log(
                     "Destruis tanto el jarron izquierdo como el central, y te percatas que hay sangre tanto en las piedras como en la maza. Procedes cuidadosamente a abrir el jarron derecho, cuando de repente una serpiente sale del mismo y te muerde la mano, para luego seguir su camino. La sombra se rie y te dice que no hay nada que puedas hacer, el veneno es demasiado fuerte. (" +
                       life +
                       " HP)"
                   );
-                  reboot();
+                  youDied();
                   break;
               }
 
@@ -485,28 +497,35 @@ function opt3() {
       } else {
         alert("Ya tomaste este camino, elegi otro.");
         opt3();
-        break;
       }
+      break;
 
     default:
       alert("Opción invalida");
       console.clear();
       opt3();
-      break;
   }
 }
 
 //reiniciar el juego
-function reboot() {
+function youDied() {
   alert("YOU DIED");
+  reboot();
+}
+
+function reboot() {
   let opcion = confirm("Comenzar nuevamente?");
   switch (opcion) {
     case true:
-      cat *= 0;
-      life += 100;
+      cat = 0;
+      life = 100;
       remo = false;
+      pathOneTaken = false;
+      pathTwoTaken = false;
+      optLeftTaken = false;
+      optRightTaken = false;
       console.clear();
-      startPoint();
+      startGame();
       break;
 
     case false:
@@ -518,5 +537,11 @@ function reboot() {
 
 function youWin() {
   alert("YOU LEFT THE CAVE ALIVE");
-  alert("Score: " + ((cat *= 30) + life));
+  const scoreValue = cat * 30 + life;
+  let score = "Score: " + scoreValue;
+  alert(score);
+  scoreBoard.push({ Nombre: userName, Score: scoreValue, Gatitos: cat });
+  scoreBoard.sort((a, b) => (a.Score < b.Score ? 1 : -1));
+  console.table(scoreBoard);
+  reboot();
 }
