@@ -541,7 +541,7 @@ function youWin() {
   let score = "Score: " + scoreValue;
   alert(score);
   scoreBoard.push({ Nombre: userName, Score: scoreValue, Gatitos: cat });
-  scoreBoard.sort((a, b) => (a.Score < b.Score ? 1 : -1));
+  scoreBoard.sort((a, b) => (a.score < b.score ? 1 : -1));
   console.table(scoreBoard);
   reboot();
 }
