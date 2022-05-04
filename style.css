@@ -1,0 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-size: 200%;
+}
+
+h1{
+    color: rgb(44, 6, 6);
+}
