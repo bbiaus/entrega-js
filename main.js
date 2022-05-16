@@ -3,7 +3,7 @@ let t = 0;
 
 let history = document.getElementById("history");
 let answer = document.getElementById("answer");
-let scoreList = document.getElementById("scoreBoard")
+let scoreList = document.getElementById("scoreBoard");
 
 login();
 function login() {
@@ -59,7 +59,7 @@ let pathOneTaken = false;
 let pathTwoTaken = false;
 let optLeftTaken = false;
 let optRightTaken = false;
-const scoreBoard = [];
+let scoreBoard = [];
 
 function nameDefined() {
   userName = answer.value;
@@ -73,6 +73,9 @@ startGame();
 function startGame() {
   history.innerText = "Elegí el nombre de tu personaje";
   answer.onchange = nameDefined;
+  const str = localStorage.getItem("score");
+  const parsedScore = JSON.parse(str);
+  scoreBoard = parsedScore || [];
 }
 
 function startPoint() {
@@ -461,9 +464,13 @@ function opt3() {
                         " HP)";
                       youDied();
                       break;
+
+                    default:
+                      alert("Opción invalida");
+                      break;
                   }
                 };
-
+                break;
               default:
                 alert("Opción invalida");
                 retryTwo();
@@ -511,17 +518,18 @@ function reboot() {
 
 function youWin() {
   alert("YOU LEFT THE CAVE ALIVE");
-  const scoreValue = cat * 30 + life;
+  const scoreValue = cat * 70 + life;
   let score = "Score: " + scoreValue;
   alert(score);
-  scoreBoard.push({ nombre: userName, score: scoreValue, gatitos: cat });
+  scoreBoard.push({ nombre: userName, score: scoreValue, cats: cat });
   scoreBoard.sort((a, b) => (a.score < b.score ? 1 : -1));
-  scoreList.innerHTML=""
+  const jsonScore = JSON.stringify(scoreBoard);
+  localStorage.setItem("score", jsonScore);
+  scoreList.innerHTML = "";
   scoreBoard.forEach((item) => {
     let li = document.createElement("li");
-    li.innerText = `Nombre: ${item.nombre} | Score: ${item.score} | Gatitos: ${item.gatitos}`
+    li.innerText = `Nombre: ${item.nombre} | Score: ${item.score} | Gatitos: ${item.cats}`;
     scoreList.appendChild(li);
   });
   reboot();
 }
-
