@@ -4,6 +4,7 @@ let t = 0;
 let history = document.getElementById("history");
 let answer = document.getElementById("answer");
 let scoreList = document.getElementById("scoreBoard");
+let title = document.getElementById("title");
 
 login();
 function login() {
@@ -21,35 +22,37 @@ function login() {
         break;
     }
   } while (i < 3);
+  t === 1 ? loginTwo() : loginFail();
+}
 
-  //en default la idea seria que te de 3 intentos pero no se como hacer un do-while dentro del if
-  if (t === 1) {
-    let contraseña = prompt("Ingrese su contraseña");
-    switch (contraseña) {
-      case "admin":
-        history.innerText = "Acceso permitido";
-        alert("Bienvenido a La Cueva");
-        t += 1;
-        break;
+function loginTwo() {
+  let contraseña = prompt("Ingrese su contraseña");
+  switch (contraseña) {
+    case "admin":
+      history.innerText = "Acceso permitido";
+      alert("Bienvenido a La Cueva");
+      t += 1;
+      break;
 
-      default:
-        alert("Contraseña incorrecta, acceso bloqueado temporalmente");
-        i = 0;
-        t = 0;
-        login();
-        break;
-    }
-  } else {
-    alert("Múltiples intentos fallidos. Acceso bloqueado temporalmente");
-    login();
+    default:
+      alert("Contraseña incorrecta, acceso bloqueado temporalmente");
+      i = 0;
+      t = 0;
+      login();
+      break;
   }
+}
+
+function loginFail() {
+  alert("Múltiples intentos fallidos. Acceso bloqueado temporalmente");
+  i = 0;
+  t = 0;
+  login();
 }
 
 //en este caso la idea era ponerle una imagen en la pagina dependiendo el resultado, pero busque en internet y vi que no era tan facil asique por ahora dejo los alert nomas
 
-if (t != 2) {
-  login();
-}
+t != 2 ? login() : startGame();
 
 let life = 100;
 let cat = 0;
@@ -67,8 +70,6 @@ function nameDefined() {
     "Lee la historia aqui, y elegi las opciones que creas conveniente, escribiendolas tal cual estan escritas en las opciones.";
   setTimeout(startPoint, 4000);
 }
-
-startGame();
 
 function startGame() {
   history.innerText = "Elegí el nombre de tu personaje";
@@ -153,10 +154,10 @@ function opt1() {
       case "descansar":
         life = 0;
         history.innerText =
-          "Te sentas en las frias piedras, apoyad@ en la pared. Mientras cerras los ojos el dolor y frio desaparecen. Te despertas 40 minutos despues, sin poder moverte, cuando te das cuenta de las pequeñas grietas al otro lado emanando un gas, las ratas te alcanzaron y esta vez van a terminar lo que empezaron. (" +
+          "Te sentas en las frias piedras, apoyad@ en la pared. Mientras cerras los ojos el dolor y frio desaparecen. Te despertas 40 minutos despues, sin poder moverte, cuando te das cuenta de las pequeñas grietas al otro lado de la cueva emanando un gas, las ratas te alcanzaron y esta vez van a terminar lo que empezaron. (" +
           life +
           " HP)";
-        setTimeout(youDied, 9000);
+        setTimeout(youDied, 9500);
         break;
 
       default:
@@ -498,22 +499,16 @@ function youDied() {
 
 function reboot() {
   let opcion = confirm("Comenzar nuevamente?");
-  switch (opcion) {
-    case true:
-      cat = 0;
-      life = 100;
-      remo = false;
-      pathOneTaken = false;
-      pathTwoTaken = false;
-      optLeftTaken = false;
-      optRightTaken = false;
-      startGame();
-      break;
-
-    case false:
-      alert("Tu aventura termina");
-      break;
-  }
+  opcion
+    ? ((cat = 0),
+      (life = 100),
+      (remo = false),
+      (pathOneTaken = false),
+      (pathTwoTaken = false),
+      (optLeftTaken = false),
+      (optRightTaken = false),
+      startGame())
+    : alert("Tu aventura termina");
 }
 
 function youWin() {
