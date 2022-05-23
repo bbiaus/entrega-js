@@ -7,9 +7,18 @@ let scoreList = document.getElementById("scoreBoard");
 let title = document.getElementById("title");
 
 login();
-function login() {
+async function login() {
   do {
-    let usuario = prompt("Ingrese su nombre de usuario");
+    let { value: usuario } = await swal.fire({
+      input: "text",
+      inputLabel: "Ingrese su usuario",
+      inputPlaceholder: "username",
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to write something!";
+        }
+      },
+    });
     switch (usuario) {
       case "admin":
         t = 1;
@@ -17,7 +26,11 @@ function login() {
         break;
 
       default:
-        alert("Usuario incorrecto, intente nuevamente");
+        await swal.fire({
+          icon: "error",
+          title: "Usuario incorrecto",
+          text: "intente nuevamente",
+        });
         i++;
         break;
     }
@@ -25,34 +38,53 @@ function login() {
   t === 1 ? loginTwo() : loginFail();
 }
 
-function loginTwo() {
-  let contraseña = prompt("Ingrese su contraseña");
+async function loginTwo() {
+  let { value: contraseña } = await swal.fire({
+    input: "password",
+    inputLabel: "Ingrese su contraseña",
+    inputPlaceholder: "password",
+    inputValidator: (value) => {
+      if (!value) {
+        return "You need to write something!";
+      }
+    },
+  });
   switch (contraseña) {
     case "admin":
-      history.innerText = "Acceso permitido";
-      alert("Bienvenido a La Cueva");
+      await swal.fire({
+        icon: "success",
+        title: "Acceso permitido",
+        text: "Bienvenido a La Cueva",
+      });
       t += 1;
       break;
 
     default:
-      alert("Contraseña incorrecta, acceso bloqueado temporalmente");
+      await swal.fire({
+        icon: "error",
+        title: "Contraseña incorrecta",
+        text: "Acceso bloqueado temporalmente",
+      });
       i = 0;
       t = 0;
       login();
       break;
   }
+  t === 2 ? startGame() : login();
 }
 
-function loginFail() {
-  alert("Múltiples intentos fallidos. Acceso bloqueado temporalmente");
+async function loginFail() {
+  await swal.fire({
+    icon: "error",
+    title: "Múltiples intentos fallidos.",
+    text: "Acceso bloqueado temporalmente",
+  });
   i = 0;
   t = 0;
   login();
 }
 
 //en este caso la idea era ponerle una imagen en la pagina dependiendo el resultado, pero busque en internet y vi que no era tan facil asique por ahora dejo los alert nomas
-
-t != 2 ? login() : startGame();
 
 let life = 100;
 let cat = 0;
@@ -64,19 +96,19 @@ let optLeftTaken = false;
 let optRightTaken = false;
 let scoreBoard = [];
 
-function nameDefined() {
-  userName = answer.value;
-  history.innerText =
-    "Lee la historia aqui, y elegi las opciones que creas conveniente, escribiendolas tal cual estan escritas en las opciones.";
-  setTimeout(startPoint, 4000);
-}
-
 function startGame() {
   history.innerText = "Elegí el nombre de tu personaje";
   answer.onchange = nameDefined;
   const str = localStorage.getItem("score");
   const parsedScore = JSON.parse(str);
   scoreBoard = parsedScore || [];
+}
+
+function nameDefined() {
+  userName = answer.value;
+  history.innerText =
+    "Lee la historia aqui, y elegi las opciones que creas conveniente, escribiendolas tal cual estan escritas en las opciones.";
+  setTimeout(startPoint, 4000);
 }
 
 function startPoint() {
@@ -89,8 +121,8 @@ function startPoint() {
   choose();
 }
 
-function choose() {
-  answer.onchange = () => {
+async function choose() {
+  answer.onchange = async () => {
     let opcion = answer.value;
     switch (opcion) {
       case "izquierda":
@@ -102,7 +134,10 @@ function choose() {
             " HP)";
           setTimeout(opt1, 8500);
         } else {
-          alert("Ya tomaste este camino, elegi otro.");
+          await swal.fire({
+            icon: "error",
+            title: "Ya tomaste este camino, elegi otro.",
+          });
           choose();
         }
         break;
@@ -116,7 +151,10 @@ function choose() {
             " HP)";
           setTimeout(opt2, 6500);
         } else {
-          alert("Ya tomaste este camino, elegi otro.");
+          await swal.fire({
+            icon: "error",
+            title: "Ya tomaste este camino, elegi otro.",
+          });
           choose();
         }
         break;
@@ -130,7 +168,10 @@ function choose() {
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         choose();
     }
   };
@@ -140,7 +181,7 @@ function choose() {
 function opt1() {
   history.innerText =
     "Te apoyas en la pared a respirar e intentar olvidar la imagen de las ratas comiendote vivo, cuando te das cuenta que estas cansado, si bien llevas despiert@ no más de 20 minutos. En la misma sala un nuevo pasillo parece ir más allá. ¿Qué haces? \n continuar o descansar";
-  answer.onchange = () => {
+  answer.onchange = async () => {
     let opcion = answer.value;
     switch (opcion) {
       case "continuar":
@@ -161,7 +202,10 @@ function opt1() {
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         opt1();
     }
   };
@@ -170,7 +214,7 @@ function opt1() {
 function cont() {
   history.innerText =
     "Tu estomago suena mientras llegas a un nuevo espacio abierto. Parece ser que las únicas dos opciones son subir por uno de los caminos, o bajar por el otro. \n subir, bajar";
-  answer.onchange = () => {
+  answer.onchange = async () => {
     let opcion = answer.value;
     switch (opcion) {
       case "subir":
@@ -187,7 +231,10 @@ function cont() {
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         cont();
     }
   };
@@ -196,7 +243,7 @@ function cont() {
 function downOne() {
   history.innerText =
     "Escuchas un ruido pErtuRbaDor mientras descendes, rocas chocando entre si, hay alguien más? Terminas de bajar, y pisas suelo firme, mientras levantas la mirada para darte cuenta que en frente tuyo hay una oscuridad absoluta, a la cual tu vista no se acosumbra. El ruido proviene del fondo de esta oscuridad, y al mismo tiempo que gritas '¿Quién esta ahí?', los sonidos cesan, y las piedras ya no chocan. Tus opciones son acercarte a la oscuridad, o correr al inicio ya que no hay una salida clara. \n correr, acercarme";
-  answer.onchange = () => {
+  answer.onchange = async () => {
     let opcion = answer.value;
     switch (opcion) {
       case "correr":
@@ -219,7 +266,10 @@ function downOne() {
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         downOne();
     }
   };
@@ -229,7 +279,7 @@ function downOne() {
 function opt2() {
   history.innerText =
     "Con un ultimo esfuerzo logras pasar por lo mas estrecho del camino y tropezas al salir del mismo, casi cayendo al vacio del pozo al frente tuyo. Observas una soga atada a una roca que baja por el mismo. Probas tu suerte bajando o volves hacia atras? \n bajar, volver";
-  answer.onchange = () => {
+  answer.onchange = async () => {
     let opcion = answer.value;
     switch (opcion) {
       case "bajar":
@@ -248,7 +298,10 @@ function opt2() {
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         opt2();
     }
   };
@@ -257,12 +310,12 @@ function opt2() {
 function downTwo() {
   history.innerText =
     "En el silencio de la cueva escuchas levemente un sonido intermitente, pero no logras distinguir por cual de los dos caminos proviene. Haces ta te ti y elegis la... \n izquierda, derecha";
-  answer.onchange = () => {
+  answer.onchange = async () => {
     let opcion = answer.value;
-    function izq() {
+    async function izq() {
       history.innerText =
         "El sonido deja de escucharse, sin embargo observas algo al final del pasillo, parece un cuerpo muerto. Algo se mueve entre su ropa desgastada, te acercas a ver o volves al otro camino?\nacercarme, volver";
-      answer.onchange = () => {
+      answer.onchange = async () => {
         let opc = answer.value;
         if (opc == "acercarme") {
           history.innerText =
@@ -274,7 +327,10 @@ function downTwo() {
           history.innerText = "Decidis volver y elegir tu camino nuevamente";
           setTimeout(downTwo, 3000);
         } else {
-          alert("Opción invalida");
+          await swal.fire({
+            icon: "error",
+            title: "Opción invalida",
+          });
           izq();
         }
       };
@@ -301,30 +357,33 @@ function downTwo() {
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         downTwo();
     }
   };
 }
 
 //camino de la derecha
-function opt3() {
+async function opt3() {
   history.innerText =
     "Una vez que el pasillo termina, llegas a un nuevo lugar, donde ya no se escucha el sonido... que curioso. En frente tuyo parece haber tres nuevos caminos, y decidis continuar por la/el...\nizquierda, centro, derecha";
-  answer.onchange = () => {
+  answer.onchange = async () => {
     let opcion = answer.value;
     switch (opcion) {
       case "izquierda":
         if (optLeftTaken == false) {
           history.innerText =
             "Al avanzar escuchas un grito al final del pasillo, por lo que te quedas inmovil por unos segundos, luego de escuchar el eco de un golpe seguido de un silencio abrumador decidis...\ncontinuar, volver";
-          answer.onchange = () => {
+          answer.onchange = async () => {
             let opc = answer.value;
             switch (opc) {
               case "continuar":
                 history.innerText =
                   "Avanzas aterrorizad@ por lo que puedas encontrar, cuanto mas te acercas, mas claro se escucha la voz de una mujer esforzandose por hablar, rogando por ayuda. Finalmente llegas al final del pasillo y el espacio se abre, a tus pies una antorcha prendida, la levantas y todo se vuelve mas claro, una mujer ensagrentada agoniza contra la pared al fondo de la cueva. Una vez que tu mente asimila lo que esta viendo, es momento de decidir si ayudarla o escapar.\nayudar, escapar";
-                answer.onchange = () => {
+                answer.onchange = async () => {
                   let opcTwo = answer.value;
                   switch (opcTwo) {
                     case "ayudar":
@@ -344,7 +403,10 @@ function opt3() {
                       break;
 
                     default:
-                      alert("Opción invalida");
+                      await swal.fire({
+                        icon: "error",
+                        title: "Opción invalida",
+                      });
                       break;
                   }
                 };
@@ -358,11 +420,17 @@ function opt3() {
                 break;
 
               default:
-                alert("Opción invalida");
+                await swal.fire({
+                  icon: "error",
+                  title: "Opción invalida",
+                });
             }
           };
         } else {
-          alert("Ya tomaste este camino, elegi otro.");
+          await swal.fire({
+            icon: "error",
+            title: "Ya tomaste este camino, elegi otro.",
+          });
           opt3();
         }
         break;
@@ -374,7 +442,7 @@ function opt3() {
         function retry() {
           answer.onchange = center;
         }
-        function center() {
+        async function center() {
           let opc = answer.value;
           switch (opc) {
             case "ofrecer gato":
@@ -384,7 +452,10 @@ function opt3() {
                   "Le entregas un pequeño gato al hombre, lo que resulta ser un error ya que no solo lo asesina y lo come, sino que no es suficiente para satisfacerlo, por lo que aún no te admite en su balsa\nofrecer gato, ofrecer remo, atacar, volver al inicio";
                 retry();
               } else {
-                alert("No tenes ningun gato");
+                await swal.fire({
+                  icon: "error",
+                  title: "No tenes ningun gato",
+                });
                 retry();
               }
               break;
@@ -395,7 +466,10 @@ function opt3() {
                   "El hombre acepta que lo acompañes para salir más facilmente de la costa, el viaje va a ser mas sencillo para los dos con un remo cada uno";
                 youWin();
               } else {
-                alert("No tenes un remo");
+                await swal.fire({
+                  icon: "error",
+                  title: "No tenes un remo",
+                });
                 retry();
               }
               break;
@@ -423,7 +497,7 @@ function opt3() {
           function retryTwo() {
             answer.onchange = choice;
           }
-          function choice() {
+          async function choice() {
             let opcion = answer.value;
             switch (opcion) {
               case "escapar":
@@ -438,7 +512,7 @@ function opt3() {
               case "tomar la maza":
                 history.innerText =
                   "Recoges la maza, y estas listo para elegir que jarrones romper, y cual abrir, mientras sentis como la sombra te observa.\nAbris el jarron: izquierdo, central, derecho";
-                answer.onchange = () => {
+                answer.onchange = async () => {
                   let destroy = answer.value;
                   switch (destroy) {
                     case "izquierdo":
@@ -467,38 +541,59 @@ function opt3() {
                       break;
 
                     default:
-                      alert("Opción invalida");
+                      await swal.fire({
+                        icon: "error",
+                        title: "Opción invalida",
+                      });
                       break;
                   }
                 };
                 break;
               default:
-                alert("Opción invalida");
+                await swal.fire({
+                  icon: "error",
+                  title: "Opción invalida",
+                });
                 retryTwo();
                 break;
             }
           }
         } else {
-          alert("Ya tomaste este camino, elegi otro.");
+          await swal.fire({
+            icon: "error",
+            title: "Ya tomaste este camino, elegi otro.",
+          });
           opt3();
         }
         break;
 
       default:
-        alert("Opción invalida");
+        await swal.fire({
+          icon: "error",
+          title: "Opción invalida",
+        });
         opt3();
     }
   };
 }
 
 //reiniciar el juego
-function youDied() {
-  alert("YOU DIED");
+async function youDied() {
+  await swal.fire({
+    icon: "warning",
+    title: "YOU DIED",
+  });
   reboot();
 }
 
-function reboot() {
-  let opcion = confirm("Comenzar nuevamente?");
+async function reboot() {
+  let {value: opcion } = await swal.fire({
+    icon: "question",
+    title: "Comenzar nuevamente?",
+    showCancelButton: true,
+    cancelButtonText: 'NO',
+    confirmButtonText: 'SI'
+  });
   opcion
     ? ((cat = 0),
       (life = 100),
@@ -508,14 +603,23 @@ function reboot() {
       (optLeftTaken = false),
       (optRightTaken = false),
       startGame())
-    : alert("Tu aventura termina");
+    : await swal.fire({
+      icon: "error",
+      title: "Tu aventura termina",
+    });
 }
 
-function youWin() {
-  alert("YOU LEFT THE CAVE ALIVE");
+async function youWin() {
+  await swal.fire({
+    icon: "success",
+    title: "YOU LEFT THE CAVE ALIVE",
+  });
   const scoreValue = cat * 70 + life;
   let score = "Score: " + scoreValue;
-  alert(score);
+  await swal.fire({
+    icon: "info",
+    title: score,
+  });
   scoreBoard.push({ nombre: userName, score: scoreValue, cats: cat });
   scoreBoard.sort((a, b) => (a.score < b.score ? 1 : -1));
   const jsonScore = JSON.stringify(scoreBoard);
