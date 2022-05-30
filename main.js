@@ -64,6 +64,12 @@ async function loginTwo() {
         icon: "error",
         title: "Contraseña incorrecta",
         text: "Acceso bloqueado temporalmente",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 10000,
       });
       i = 0;
       t = 0;
@@ -78,6 +84,12 @@ async function loginFail() {
     icon: "error",
     title: "Múltiples intentos fallidos.",
     text: "Acceso bloqueado temporalmente",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    timerProgressBar: true,
+    timer: 10000,
   });
   i = 0;
   t = 0;
@@ -464,6 +476,7 @@ async function opt3() {
               if (remo == true) {
                 history.innerText =
                   "El hombre acepta que lo acompañes para salir más facilmente de la costa, el viaje va a ser mas sencillo para los dos con un remo cada uno";
+                fetch();
                 youWin();
               } else {
                 await swal.fire({
@@ -587,12 +600,12 @@ async function youDied() {
 }
 
 async function reboot() {
-  let {value: opcion } = await swal.fire({
+  let { value: opcion } = await swal.fire({
     icon: "question",
     title: "Comenzar nuevamente?",
     showCancelButton: true,
-    cancelButtonText: 'NO',
-    confirmButtonText: 'SI'
+    cancelButtonText: "NO",
+    confirmButtonText: "SI",
   });
   opcion
     ? ((cat = 0),
@@ -604,9 +617,9 @@ async function reboot() {
       (optRightTaken = false),
       startGame())
     : await swal.fire({
-      icon: "error",
-      title: "Tu aventura termina",
-    });
+        icon: "error",
+        title: "Tu aventura termina",
+      });
 }
 
 async function youWin() {
@@ -620,6 +633,11 @@ async function youWin() {
     icon: "info",
     title: score,
   });
+  let reward = await getReward(scoreValue);
+  await swal.fire({
+    icon: "info",
+    title: "Felicidades! Ganaste un/a: " + reward,
+  });
   scoreBoard.push({ nombre: userName, score: scoreValue, cats: cat });
   scoreBoard.sort((a, b) => (a.score < b.score ? 1 : -1));
   const jsonScore = JSON.stringify(scoreBoard);
@@ -631,4 +649,20 @@ async function youWin() {
     scoreList.appendChild(li);
   });
   reboot();
+}
+
+async function getReward(score) {
+  try{
+  const compress = (score % 20) + 1;
+  const rewardData = await fetch(
+    `https://fakestoreapi.com/products/${compress}`
+  );
+  const reward = await rewardData.json();
+  return reward.title;
+  }catch(err){
+    await swal.fire({
+      icon: "info",
+      title: "Hubo un error en la operacion: " + err.message,
+    })
+  }
 }
